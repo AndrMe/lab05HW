@@ -1,0 +1,17 @@
+
+cmake_minimum_required(VERSION 3.10)
+
+project(all)
+
+add_subdirectory(banking)
+
+option(BUILD_TESTS "Build tests" OFF)
+
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(third-party/gtest)
+  file(GLOB ${PROJECT_NAME}_TEST_SOURCES tests/*.cpp)
+  add_executable(check ${${PROJECT_NAME}_TEST_SOURCES})
+  target_link_libraries(check gtest_main)
+  add_test(NAME check COMMAND check)
+endif()
