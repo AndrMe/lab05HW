@@ -78,8 +78,8 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build${{matrix.c_comp}}
-          path: build${{matrix.c_comp}}/
+          name: _build${{matrix.c_comp}}
+          path: _build${{matrix.c_comp}}/
 
       - name: Run tests
-        run: cmake --build build${{matrix.c_comp}}/ --target test -- ARGS=--verbose
+        run: cmake --build _build${{matrix.c_comp}}/ --target test -- ARGS=--verbose
