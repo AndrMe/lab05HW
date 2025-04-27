@@ -30,7 +30,9 @@ jobs:
           sudo apt-get update
           cmake -H. -B_build${{matrix.c_comp}} -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON
       - name: building
-        run:  cmake --build _build${{matrix.c_comp}}
+        run: |
+          cmake --build _build${{matrix.c_comp}}
+          cd _build${{matrix.c_comp}}/ && ctest --output-on-failure
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
