@@ -26,7 +26,9 @@ jobs:
           submodules: recursive
 
       - name: preparing build
-        run:  cmake -H. -B_build${{matrix.c_comp}} -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON
+        run: |
+          sudo apt-get update
+          cmake -H. -B_build${{matrix.c_comp}} -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON
       - name: building
         run:  cmake --build _build${{matrix.c_comp}}
 
@@ -82,4 +84,5 @@ jobs:
           path: _build${{matrix.c_comp}}/
 
       - name: Run tests
-        run: cmake --build _build${{matrix.c_comp}}/ --target test -- ARGS=--verbose
+        # run: cmake --build _build${{matrix.c_comp}}/ --target test -- ARGS=--verbose
+        run: cd _build${{matrix.c_comp}}/ && ctest --output-on-failure
