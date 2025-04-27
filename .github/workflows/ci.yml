@@ -28,7 +28,8 @@ jobs:
       - name: preparing build
         run: |
           sudo apt-get update
-          cmake -H. -B_build${{matrix.c_comp}} -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON
+          cmake -H. -B_build${{matrix.c_comp}} -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON -DTESTS_NAME=tests
+
       - name: building
         run: |
           cmake --build _build${{matrix.c_comp}}
@@ -87,4 +88,7 @@ jobs:
 
       - name: Run tests
         # run: cmake --build _build${{matrix.c_comp}}/ --target test -- ARGS=--verbose
-        run: cd _build${{matrix.c_comp}}/ && ctest --output-on-failure
+        run: |
+          cd _build${{matrix.c_comp}}/
+          chmod +x tests
+          ctest --output-on-failure
