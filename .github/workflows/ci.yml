@@ -26,15 +26,15 @@ jobs:
           submodules: recursive
 
       - name: preparing build
-        run:  cmake -H. -B_build -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON
+        run:  cmake -H. -B_build${{matrix.c_comp}} -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON
       - name: building
-        run:  cmake --build _build
+        run:  cmake --build _build${{matrix.c_comp}}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build${{matrix.c_comp}}
-          path: _build/
+          path: _build${{matrix.c_comp}}/
           retention-days: 1
 
   # build_on_windows:
