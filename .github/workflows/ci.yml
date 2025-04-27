@@ -33,7 +33,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build${{matrix.c_comp}}
+          name: _build${{matrix.c_comp}}
           path: _build${{matrix.c_comp}}/
           retention-days: 1
 
