@@ -1,0 +1,85 @@
+name: CI workflow for homework
+
+on:
+  [push, pull_request]
+
+jobs:
+
+
+
+  build_on_linux:
+    name: Build on Linux
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cpp_comp: g++
+            c_comp: gcc
+          - cpp_comp: clang++
+            c_comp: clang
+
+    steps:
+      - name: checking out repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: preparing build
+        run:  cmake -H. -B_build -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON
+      - name: building
+        run:  cmake --build _build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build${{matrix.c_comp}}
+          path: _build/
+          retention-days: 1
+
+  # build_on_windows:
+  #   runs-on: ${{matrix.os}}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [windows-latest]
+
+  #   steps:
+  #     - name: checking out repository
+  #       uses: actions/checkout@v4
+
+  #     - name: preparing build
+  #       run:  cmake . -B_build 
+  #     - name: building
+  #       run:  cmake --build _build
+  #     - name: checking programs output
+  #       run:  |
+  #         echo "1 -5  6" | _build\solver_application\Debug\solver_app 
+  #         _build\hello_world_application\Debug\hello
+
+  #     - name: status info
+  #       run: echo ${{ job.status }} is status of job
+  test-linux:
+    name: Run Google Tests on linux
+    needs: build_on_linux
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cpp_comp: g++
+            c_comp: gcc
+          - cpp_comp: clang++
+            c_comp: clang
+    steps:
+      - name: checking out repository and submodules
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build${{matrix.c_comp}}
+          path: build${{matrix.c_comp}}/
+
+      - name: Run tests
+        run: cmake --build build${{matrix.c_comp}}/ --target test -- ARGS=--verbose
