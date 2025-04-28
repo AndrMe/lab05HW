@@ -81,10 +81,10 @@ jobs:
         with:
           name: _build${{matrix.c_comp}}
           path: _build${{matrix.c_comp}}/
-      - name: Install dependencies
+      - name: Check and install dependencies
         run: |
           sudo apt-get update    
-          sudo apt-get install gcov
+          gcov --version
           sudo apt-get install lcov   
 
       - name: Run tests
