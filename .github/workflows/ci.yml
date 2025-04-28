@@ -113,9 +113,12 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: windows_build  
+          name: windows_build
+          path: _build/    
       - name: Running tests
-        run: _build/Release/tests.exe
+        run: |
+          tree
+          _build/Release/tests.exe
         
   Create_Coverage:
     name: Create_Coverage
