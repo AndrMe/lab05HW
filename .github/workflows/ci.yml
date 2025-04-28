@@ -107,4 +107,4 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: _build${{matrix.c_comp}}/result_coverage.info
+          path-to-lcov: result_coverage.info
