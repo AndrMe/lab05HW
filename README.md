@@ -4,17 +4,23 @@
 
 Данная лабораторная работа посвещена изучению фреймворков для тестирования на примере **GTest**
 
-## Установка и компиляция
+## Установка и компиляция(linux)
 - Чтобы установить можно выполнить:
-	  ```sh
-		$ export LAB_DIR=labDir
-		$ git clone https://github.com/AndrMe/lab05HW ${LAB_DIR} --recurse-submodules && cd ${LAB_DIR}
-		```
--  Чтобы скомпилировать и запустить тесты(linux):
-	```sh
-		$ ./build.sh
-	```
-	Или вручную через cmake
+```sh
+$ export LAB_DIR=labDir
+$ git clone https://github.com/AndrMe/lab05HW ${LAB_DIR} --recurse-submodules && cd ${LAB_DIR}
+```
+-  Чтобы скомпилировать и запустить тесты:
+```sh
+$ ./build.sh
+```
+Или вручную через cmake
+
+---
+Переменные cmake:
+- BUILD_TESTS=ON/OFF - собирка тестов
+- TESTS_NAME=tests - имя файла с тестами
+- ENABLE_COVERAGE=ON/OFF - задание флагов " ```  -g -coverage ```" 
 
 --- 
 
