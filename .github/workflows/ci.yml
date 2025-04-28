@@ -38,28 +38,53 @@ jobs:
           path: _build${{matrix.c_comp}}/
           retention-days: 1
 
-  # build_on_windows:
-  #   runs-on: ${{matrix.os}}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       os: [windows-latest]
+  build_on_windows:
+    name: Build on windows
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
 
-  #   steps:
-  #     - name: checking out repository
-  #       uses: actions/checkout@v4
+    steps:
+      - name: checking out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-  #     - name: preparing build
-  #       run:  cmake . -B_build 
-  #     - name: building
-  #       run:  cmake --build _build
-  #     - name: checking programs output
-  #       run:  |
-  #         echo "1 -5  6" | _build\solver_application\Debug\solver_app 
-  #         _build\hello_world_application\Debug\hello
+      - name: preparing build
+        run:  cmake . -B_build -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=true
+      - name: building
+        run:  cmake --build _build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows_build
+          path: _builds/
+          retention-days: 1
 
-  #     - name: status info
-  #       run: echo ${{ job.status }} is status of job
+
+  test_on_windows:
+    name: Run Google Tests on Windows
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+
+    steps:
+      - name: checking out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows_build
+          path: _build/    
+      - name: Running tests
+        run: _build/tests.exe
+
   test-linux:
     name: Run Google Tests on linux
     needs: build_on_linux
