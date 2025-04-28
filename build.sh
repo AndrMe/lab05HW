@@ -1,8 +1,10 @@
-cmake -H. -B_build -DBUILD_TESTS=ON\
-|| \
-rm -rf _build\
+if [${B_dir} == '']
+then
+export B_dir=_build
+fi
+echo ${B_dir} 
+cmake -H. -B${B_dir} -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=false\
+&&\
+cmake --build ${B_dir} \
 && \
-cmake --build _build \
-&& \
-cmake --build _build --target test -- ARGS=--verbose\
-
+cmake --build ${B_dir} --target test -- ARGS=--verbose
