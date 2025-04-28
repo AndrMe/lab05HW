@@ -55,7 +55,7 @@ jobs:
           submodules: recursive
 
       - name: preparing build
-        run:  cmake . -B_build -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=false -DGTEST_CREATE_SHARED_LIBRARY=0 -DGTEST_LINKED_AS_SHARED_LIBRARY=0
+        run:  cmake . -B_build -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=false -Dgtest_force_shared_crt=ON
       - name: building
         run:  cmake --build _build
       - name: Upload build artifacts
