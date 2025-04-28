@@ -11,6 +11,20 @@ TEST(AccountTests, GetBalance)
     EXPECT_EQ(balance, result);
 }
 
+TEST(AccountTests, ChangeBalance)
+{
+    const int balance = 1000;
+    const int sum = 1000;
+    Account acc(1, balance);
+
+    acc.Lock();
+    acc.ChangeBalance(sum);
+    acc.Unlock();
+
+    EXPECT_EQ((balance + sum), acc.GetBalance());
+}
+
+
 TEST(AccountTests, Lock_locked)
 {
     const int balance = 1000;

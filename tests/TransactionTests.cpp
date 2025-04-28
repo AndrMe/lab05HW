@@ -120,8 +120,31 @@ TEST(TransactionTests, Tr_not_succeeded)
     EXPECT_FALSE(result); 
 }   
 
+TEST(TransactionTests, DatabaseSaving)
+{
+    const int val1 = 200;
+    const int val2 = 250;
+    MockAccount account1(1,val1);
+    MockAccount account2(2,val2);
+    Transaction transaction;
+    const int sum = 150;
 
+    EXPECT_CALL(account1, Lock()).Times(1);
+    EXPECT_CALL(account2, Lock()).Times(1);
+    EXPECT_CALL(account2, ChangeBalance(testing::_)).Times(AtLeast(1));
+    EXPECT_CALL(account1, ChangeBalance(testing::_)).Times(AtLeast(1));
+    EXPECT_CALL(account1, GetBalance()).Times(2).WillOnce(Return(val1)).WillOnce(Return(val1 - sum - transaction.fee()));
+    EXPECT_CALL(account2, GetBalance()).Times(1).WillOnce(Return(val2 + sum));
+    EXPECT_CALL(account1, Unlock()).Times(1);
+    EXPECT_CALL(account2, Unlock()).Times(1);
+    
+    testing::internal::CaptureStdout();
+    transaction.Make(account1, account2, sum);
+    std::string output = testing::internal::GetCapturedStdout();
+    
+    EXPECT_EQ(output, "1 send to 2 $150\nBalance 1 is 49\nBalance 2 is 400\n");
 
+}
 
 
 
