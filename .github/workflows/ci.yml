@@ -63,28 +63,6 @@ jobs:
           path: _builds/
           retention-days: 1
 
-
-  test_on_windows:
-    name: Run Google Tests on Windows
-    runs-on: ${{matrix.os}}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest]
-
-    steps:
-      - name: checking out repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: windows_build
-          path: _build/    
-      - name: Running tests
-        run: _build/tests.exe
-
   test-linux:
     name: Run Google Tests on linux
     needs: build_on_linux
@@ -116,9 +94,32 @@ jobs:
           chmod +x tests
           ./tests
 
+  test_on_windows:
+    name: Run Google Tests on Windows
+    needs: build_on_windows
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+
+    steps:
+      - name: checking out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows_build
+          path: _build/    
+      - name: Running tests
+        run: _build/tests.exe
+        
   Create_Coverage:
     name: Create_Coverage
-    needs: test-linux
+    needs: [test-linux, test_on_windows]
+    if : github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true  
