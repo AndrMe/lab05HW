@@ -13,8 +13,10 @@ jobs:
         include:
           - cpp_comp: g++
             c_comp: gcc
+            coverage: true
           - cpp_comp: clang++
             c_comp: clang
+            coverage: false
 
     steps:
       - name: checking out repository and submodules
@@ -26,7 +28,7 @@ jobs:
         run: |
           sudo apt-get update
           cmake -H. -B_build${{matrix.c_comp}} -D CMAKE_CXX_COMPILER=${{matrix.cpp_comp}} \
-            -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=true
+            -D CMAKE_C_COMPILER=${{matrix.c_comp}} -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=${{matrix.coverage}}
       - name: building
         run: |
           cmake --build _build${{matrix.c_comp}}
@@ -53,7 +55,7 @@ jobs:
           submodules: recursive
 
       - name: preparing build
-        run:  cmake . -B_build -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=true
+        run:  cmake . -B_build -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=false
       - name: building
         run:  cmake --build _build
       - name: Upload build artifacts
