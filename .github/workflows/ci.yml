@@ -113,8 +113,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: windows_build
-          path: _build/    
+          name: windows_build  
       - name: Running tests
         run: _build/Release/tests.exe
         
