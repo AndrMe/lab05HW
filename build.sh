@@ -1,4 +1,4 @@
-if [${B_dir} == '']
+if [ ${B_dir}='' ]
 then
 export B_dir=_build
 fi
