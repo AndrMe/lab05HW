@@ -55,7 +55,7 @@ jobs:
           submodules: recursive
 
       - name: preparing build
-        run:  cmake . -B_build -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=false -Dgtest_force_shared_crt=ON
+        run:  cmake . -B_build -DBUILD_TESTS=ON -DTESTS_NAME=tests -DENABLE_COVERAGE=false -Dgtest_force_shared_crt=ON -DCMAKE_BUILD_TYPE=Release
       - name: building
         run:  cmake --build _build
       - name: Upload build artifacts
@@ -116,7 +116,7 @@ jobs:
           name: windows_build
           path: _build/    
       - name: Running tests
-        run: _build/tests.exe
+        run: _build/Release/tests.exe
         
   Create_Coverage:
     name: Create_Coverage
