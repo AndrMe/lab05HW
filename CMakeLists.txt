@@ -1,7 +1,13 @@
-
 cmake_minimum_required(VERSION 3.10)
 
 project(all)
+
+if(ENABLE_COVERAGE)
+  # set compiler flags
+  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-g -coverage")
+  set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-g -coverage")
+
+endif()
 
 add_subdirectory(banking)
 
@@ -19,3 +25,8 @@ if(BUILD_TESTS)
   target_link_libraries(${TESTS_NAME} banking gtest_main gmock_main)
   add_test(NAME ${TESTS_NAME} COMMAND ${TESTS_NAME})
 endif()
+
+message("flags:" ${CMAKE_CXX_FLAGS})
+message("flags C:" ${CMAKE_C_FLAGS})
+message("BUILD_TESTS:" ${BUILD_TESTS})
+message("ENABLE_COVERAGE:" ${ENABLE_COVERAGE})
